@@ -22,11 +22,13 @@ namespace ipm_backend_api.Policies
 
             var policy = PolicyMapper.ToPolicy(requestDto);
 
-            policy = await _db.Policies.AddAsync(policy);
+            await _db.Policies.AddAsync(policy);
 
             string result = await _db.SaveAsync();
 
-            return ResponseHandler.GetSuccessResponse(policy,result);
+            policy = await _db.Policies.GetByIdAsync(policy.Id);
+
+            return ResponseHandler.GetSuccessResponse(PolicyMapper.ToPolicyResponse(policy),result);
         }
 
         public async Task<APIResponse> GetAllPolicyAsync()

@@ -28,7 +28,7 @@ namespace ipm_backend_api.Policies
 
         public async Task<Policy> GetByIdAsync(Guid id)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Policy> UpdateAsync(Policy policy)
