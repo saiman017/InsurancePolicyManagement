@@ -57,6 +57,10 @@ namespace ipm_backend_api.Policies
             if (existingPolicy == null)
                 throw new KeyNotFoundException($"Policy with Id {id} does not exists");
 
+            var validationResult = requestDto.Validate();
+            if (!validationResult.IsValid)
+                return ResponseHandler.GetValidationErrorResponse(validationResult);
+
             PolicyMapper.ToUpdatePolicy(existingPolicy, requestDto);
 
             await _db.Policies.UpdateAsync(existingPolicy);
