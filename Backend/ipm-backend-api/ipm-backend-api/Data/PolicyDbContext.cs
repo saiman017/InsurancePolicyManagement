@@ -11,5 +11,14 @@ namespace ipm_backend_api.Data
 
         public DbSet<Policy> Policies { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Policy>()
+                .Property(p => p.PolicyNumber)
+                .ValueGeneratedOnAdd();
+        }
+
     }
 }
