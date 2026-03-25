@@ -23,9 +23,10 @@ namespace ipm_backend_api.Policies
             var policy = PolicyMapper.ToPolicy(requestDto);
 
             policy = await _db.Policies.AddAsync(policy);
-            await _db.SaveAsync();
 
-            return ResponseHandler.GetSuccessResponse(PolicyMapper.ToPolicyResponse(policy));
+            string result = await _db.SaveAsync();
+
+            return ResponseHandler.GetSuccessResponse(policy,result);
         }
 
         public async Task<APIResponse> GetAllPolicyAsync()

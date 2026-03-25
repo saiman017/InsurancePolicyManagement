@@ -6,9 +6,9 @@ namespace ipm_backend_api.Policies.Dtos
     {
         public Guid Id { get; set; }
 
-        public string PolicyNumber { get; set; } = string.Empty;
+        public string PolicyNumber { get; set; }
 
-        public string CustomerName { get; set; } = string.Empty;
+        public string CustomerName { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public PolicyType PolicyType { get; set; }
