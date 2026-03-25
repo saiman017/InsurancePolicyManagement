@@ -6,9 +6,7 @@ namespace ipm_backend_api.Policies.Dtos
     {
         public PolicyRequestDtoValidator _validator = new PolicyRequestDtoValidator();
 
-        public string PolicyNumber { get; set; } = string.Empty;
-
-        public string CustomerName { get; set; } = string.Empty;
+        public string CustomerName { get; set; }
 
         public PolicyType PolicyType { get; set; }
 

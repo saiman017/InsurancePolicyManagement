@@ -6,14 +6,9 @@ namespace ipm_backend_api.Policies.Dtos
     {
         public PolicyRequestDtoValidator()
         {
-            RuleFor(x => x.PolicyNumber)
-                .NotEmpty().WithMessage("Policy Number is required.")
-                .MaximumLength(20).WithMessage("Policy Number cannot exceed 20 characters.");
-
             RuleFor(x => x.CustomerName)
                 .NotEmpty().WithMessage("Customer Name is required.")
                 .MaximumLength(100).WithMessage("Customer Name cannot exceed 100 characters.");
-
 
             RuleFor(x => x.SumInsured)
                 .GreaterThan(0).WithMessage("Sum Insured must be greater than zero.");

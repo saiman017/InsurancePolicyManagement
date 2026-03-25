@@ -1,7 +1,6 @@
 ﻿using ipm_backend_api.Policies.Contracts;
 using ipm_backend_api.Policies.Dtos;
 using ipm_backend_api.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ipm_backend_api.Policies
@@ -32,7 +31,6 @@ namespace ipm_backend_api.Policies
             var apiResponse = await _policyService.GetAllPolicyAsync();
 
             return apiResponse;
-
         }
 
         [HttpGet("{id}")]

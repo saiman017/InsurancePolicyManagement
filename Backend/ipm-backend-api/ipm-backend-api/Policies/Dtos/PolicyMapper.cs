@@ -8,7 +8,6 @@ namespace ipm_backend_api.Policies
         {
             return new Policy
             {
-                PolicyNumber = requestDto.PolicyNumber,
                 CustomerName = requestDto.CustomerName,
                 PolicyType = requestDto.PolicyType,
                 SumInsured = requestDto.SumInsured,
@@ -21,7 +20,6 @@ namespace ipm_backend_api.Policies
 
         public static Policy ToUpdatePolicy(Policy policy, PolicyRequestDto requestDto)
         {
-            policy.PolicyNumber = requestDto.PolicyNumber;
             policy.CustomerName = requestDto.CustomerName;
             policy.PolicyType = requestDto.PolicyType;
             policy.SumInsured = requestDto.SumInsured;
