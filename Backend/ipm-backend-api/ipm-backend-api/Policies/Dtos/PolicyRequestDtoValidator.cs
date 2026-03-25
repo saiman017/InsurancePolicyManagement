@@ -11,7 +11,12 @@ namespace ipm_backend_api.Policies.Dtos
                 .MaximumLength(100).WithMessage("Customer Name cannot exceed 100 characters.");
 
             RuleFor(x => x.SumInsured)
-                .GreaterThan(0).WithMessage("Sum Insured must be greater than zero.");
+                .GreaterThan(0).WithMessage("Sum Insured must be greater than zero.")
+                .LessThanOrEqualTo(20000000)
+                .WithMessage("High Value Policy. Requires Underwriting Approval"); ;
+
+            RuleFor(x => x.PolicyType)
+               .IsInEnum().WithMessage("Policy Type must be 1, 2 or 3.");
 
             RuleFor(x => x.StartDate)
                 .NotEmpty().WithMessage("Start Date is required.");

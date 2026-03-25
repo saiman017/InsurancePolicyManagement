@@ -16,8 +16,6 @@ namespace ipm_backend_api.Policies.Dtos
 
         public DateTimeOffset EndDate { get; set; }
 
-        public bool IsActive { get; set; } = true;
-
         public ValidationResult Validate()
         {
             return _validator.Validate(this);

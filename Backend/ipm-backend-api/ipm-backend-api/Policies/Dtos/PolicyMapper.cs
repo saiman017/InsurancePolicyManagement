@@ -13,7 +13,7 @@ namespace ipm_backend_api.Policies
                 SumInsured = requestDto.SumInsured,
                 StartDate = requestDto.StartDate,
                 EndDate = requestDto.EndDate,
-                IsActive = requestDto.IsActive,
+                IsActive = requestDto.EndDate >= DateTimeOffset.UtcNow,
                 CreatedDate = DateTimeOffset.UtcNow
             };
         }
@@ -25,7 +25,7 @@ namespace ipm_backend_api.Policies
             policy.SumInsured = requestDto.SumInsured;
             policy.StartDate = requestDto.StartDate;
             policy.EndDate = requestDto.EndDate;
-            policy.IsActive = requestDto.IsActive;
+            policy.IsActive = requestDto.EndDate >= DateTimeOffset.UtcNow;
 
             return policy;
         }
