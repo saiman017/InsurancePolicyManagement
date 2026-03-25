@@ -1,4 +1,6 @@
-﻿namespace ipm_backend_api.Policies.Dtos
+﻿using System.Text.Json.Serialization;
+
+namespace ipm_backend_api.Policies.Dtos
 {
     public class PolicyResponseDto
     {
@@ -8,6 +10,7 @@
 
         public string CustomerName { get; set; } = string.Empty;
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public PolicyType PolicyType { get; set; }
 
         public decimal SumInsured { get; set; }
