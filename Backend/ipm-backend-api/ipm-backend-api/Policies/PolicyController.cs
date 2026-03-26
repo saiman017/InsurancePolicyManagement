@@ -48,5 +48,23 @@ namespace ipm_backend_api.Policies
 
             return apiResponse;
         }
+
+        [HttpGet("summary")]
+        public async Task<APIResponse> GetPolicySummaryAsync()
+        {
+            return await _policyService.GetPolicySummaryAsync();
+        }
+
+        [HttpGet("count-by-type")]
+        public async Task<APIResponse> GetPolicyCountByTypeAsync()
+        {
+            return await _policyService.GetPolicyCountByTypeAsync();
+        }
+
+        [HttpGet("sum-insured-by-type")]
+        public async Task<APIResponse> GetSumInsuredByTypeAsync()
+        {
+            return await _policyService.GetSumInsuredByTypeAsync();
+        }
     }
 }
