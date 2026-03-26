@@ -160,7 +160,7 @@ export default function DisplayPolicy() {
       <PageBreadcrumb pageTitle="Policy Management" />
 
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Policy List</h2>
+        <h2 className="text-xl font-semibold">Policy Management</h2>
         <Button
           type="primary"
           icon={<AddIcon style={{ fontSize: 18 }} />}

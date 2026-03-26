@@ -2,8 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { BoxCubeIcon, ChevronDownIcon, GridIcon, HorizontaLDots, ListIcon, PieChartIcon, PlugInIcon, TableIcon, UserCircleIcon } from "../icons";
-import {  FiUsers, FiBriefcase, FiTag, FiList, FiShield } from "react-icons/fi";
+import { FiUsers, FiBriefcase, FiTag, FiList, FiShield } from "react-icons/fi";
 import { useSidebar } from "../context/SidebarContext";
+import Logo from "../icons/Logo.png";
 
 const navItems = [
   {
@@ -167,13 +168,31 @@ const AppSidebar = () => {
     >
       <div className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}>
         <Link to="/">
-          {isExpanded || isHovered || isMobileOpen ? (
+          {(isExpanded || isHovered || isMobileOpen) ? (
             <>
-              <img className="dark:hidden" src="../icons/Logo.png" alt="Logo" width={130} height={40} />
-              <img className="hidden dark:block" src="../icons/Logo.png" alt="Logo" width={150} height={40} />
+              <img 
+                className="dark:hidden" 
+                src={Logo} 
+                alt="Logo" 
+                width={90} 
+                height={30} 
+              />
+              <img 
+                className="hidden dark:block" 
+                src={Logo} 
+                alt="Logo" 
+                width={90} 
+                height={30} 
+              />
             </>
           ) : (
-            <img src="/images/logo/logo-sideBar.png" alt="Logo" width={80} height={80} />
+            <img 
+              src={Logo} 
+              alt="Logo" 
+              width={40} 
+              height={40} 
+              className="w-10 h-10 object-contain"
+            />
           )}
         </Link>
       </div>
