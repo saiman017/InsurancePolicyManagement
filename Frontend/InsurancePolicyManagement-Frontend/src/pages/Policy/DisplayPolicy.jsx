@@ -8,15 +8,10 @@ import AddIcon from "@mui/icons-material/Add";
 import { Button } from "antd";
 import TextField from "@mui/material/TextField";
 import PolicyForm from "./PolicyForm";
+import { formatCurrency, formatNepaliNumber } from "../../utils/currencyFormatter";
 
 const POLICY_TYPE_LABEL = { 0: "Motor", 1: "Property", 2: "Travel" };
 const POLICY_TYPE_COLOR = { 0: "blue", 1: "purple", 2: "cyan" };
-
-const formatCurrency = (amount) => {
-  if (amount >= 10000000) return `₹${(amount / 10000000).toFixed(2)} Cr`;
-  if (amount >= 100000) return `₹${(amount / 100000).toFixed(2)} L`;
-  return `₹${Number(amount).toLocaleString("en-IN")}`;
-};
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "-";
@@ -109,7 +104,7 @@ export default function DisplayPolicy() {
       sorter: (a, b) => a.sumInsured - b.sumInsured,
       render: (val) => (
         <span className={Number(val) > 20000000 ? "text-orange-600 font-semibold" : ""}>
-          {formatCurrency(val)}
+          {formatNepaliNumber(val)}
           {Number(val) > 20000000 && (
             <span className="ml-1 text-xs bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full">
               High Value
