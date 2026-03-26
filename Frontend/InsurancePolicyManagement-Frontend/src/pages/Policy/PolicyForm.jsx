@@ -7,21 +7,24 @@ import dayjs from "dayjs";
 import { addPolicy, editPolicy, fetchPolicies, getPolicyById } from "../../redux/slice/policy";
 import { toast } from "react-toastify";
 
-const HIGH_VALUE_THRESHOLD = 20000000; // 2 Crore
+const HIGH_VALUE_THRESHOLD = 20000000;
 
 const POLICY_TYPE_OPTIONS = [
-  { label: "Motor", value: 0 },
-  { label: "Property", value: 1 },
-  { label: "Travel", value: 2 },
+  { label: "Motor", value: 1 },
+  { label: "Property", value: 2 },
+  { label: "Travel", value: 3 },
 ];
+
+const enumMap = {
+  Motor: 1,
+  Property: 2,
+  Travel: 3,
+};
 
 const validationSchema = Yup.object({
   customerName: Yup.string().required("Customer name is required"),
   policyType: Yup.number().required("Policy type is required"),
-  sumInsured: Yup.number()
-    .typeError("Sum insured must be a number")
-    .required("Sum insured is required")
-    .positive("Sum insured must be positive"),
+  sumInsured: Yup.number().typeError("Sum insured must be a number").required("Sum insured is required").positive("Sum insured must be positive"),
   startDate: Yup.string().required("Start date is required"),
   endDate: Yup.string()
     .required("End date is required")
@@ -32,17 +35,19 @@ const validationSchema = Yup.object({
     }),
 });
 
-const PolicyFormik = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData }) => {
+const PolicyForm = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData }) => {
   const dispatch = useDispatch();
-  const [policyData, setPolicyData] = useState(initialData || null);
+  const [policyData, setPolicyData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!isNewPolicy && policyId && !initialData) {
+    if (isNewPolicy) {
+      setPolicyData(null);
+    } else if (policyId && !initialData) {
       dispatch(getPolicyById(policyId))
         .unwrap()
         .then((data) => setPolicyData(data))
-        .catch((err) => console.error("Failed to fetch policy", err));
+        .catch(() => {});
     } else if (initialData) {
       setPolicyData(initialData);
     }
@@ -50,8 +55,8 @@ const PolicyFormik = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData
 
   const initialValues = {
     customerName: policyData?.customerName || "",
-    policyType: policyData?.policyType ?? "",
-    sumInsured: policyData?.sumInsured || "",
+    policyType: typeof policyData?.policyType === "string" ? enumMap[policyData.policyType] : policyData?.policyType ?? null,
+    sumInsured: policyData?.sumInsured ?? "",
     startDate: policyData?.startDate || "",
     endDate: policyData?.endDate || "",
   };
@@ -77,33 +82,24 @@ const PolicyFormik = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData
       toast.error(err.message || (isNewPolicy ? "Failed to create policy" : "Failed to update policy"));
     } finally {
       setLoading(false);
-      resetForm();
-      dispatch(fetchPolicies());
-      onClose();
-      if (didSucceed) afterSubmit?.();
+      if (didSucceed) {
+        resetForm();
+        dispatch(fetchPolicies());
+        onClose();
+        afterSubmit?.();
+      }
     }
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-      enableReinitialize
-    >
+    <Formik key={isNewPolicy ? "new" : policyId} initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} enableReinitialize>
       {({ setFieldValue, values }) => (
         <Form className="space-y-4">
-
-          {/* High Value Warning */}
           {Number(values.sumInsured) > HIGH_VALUE_THRESHOLD && (
-            <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg px-4 py-3 text-sm font-medium">
-              ⚠️ High Value Policy — Requires Underwriting Approval
-            </div>
+            <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg px-4 py-3 text-sm font-medium">High Value Policy — Requires Underwriting Approval</div>
           )}
 
           <div className="grid grid-cols-2 gap-4">
-
-            {/* Customer Name */}
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Customer Name <span className="text-red-500">*</span>
@@ -112,76 +108,48 @@ const PolicyFormik = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData
               <ErrorMessage name="customerName" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
-            {/* Policy Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Policy Type <span className="text-red-500">*</span>
               </label>
-              <Field name="policyType">
-                {({ field }) => (
-                  <Select
-                    {...field}
-                    placeholder="Select policy type"
-                    className="w-full"
-                    value={values.policyType === "" ? undefined : values.policyType}
-                    onChange={(val) => setFieldValue("policyType", val)}
-                    options={POLICY_TYPE_OPTIONS}
-                  />
-                )}
-              </Field>
+              <Select placeholder="Select policy type" className="w-full" value={values.policyType} onChange={(val) => setFieldValue("policyType", val)} options={POLICY_TYPE_OPTIONS} />
               <ErrorMessage name="policyType" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
-            {/* Sum Insured */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Sum Insured (₹) <span className="text-red-500">*</span>
               </label>
-              <Field name="sumInsured">
-                {({ field }) => (
-                  <Input
-                    {...field}
-                    type="number"
-                    placeholder="Enter sum insured"
-                    onChange={(e) => setFieldValue("sumInsured", e.target.value)}
-                  />
-                )}
-              </Field>
+              <Field name="sumInsured">{({ field }) => <Input {...field} type="number" placeholder="Enter sum insured" onChange={(e) => setFieldValue("sumInsured", e.target.value)} />}</Field>
               <ErrorMessage name="sumInsured" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
-            {/* Start Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Start Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
                 className="w-full"
-                value={values.startDate ? dayjs(values.startDate) : undefined}
-                onChange={(date) => setFieldValue("startDate", date?.toISOString() || "")}
+                value={values.startDate ? dayjs(values.startDate) : null}
+                disabledDate={(current) => current && current < dayjs().startOf("day")}
+                onChange={(date) => setFieldValue("startDate", date ? date.toISOString() : "")}
               />
               <ErrorMessage name="startDate" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
-            {/* End Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 End Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
                 className="w-full"
-                value={values.endDate ? dayjs(values.endDate) : undefined}
-                disabledDate={(current) =>
-                  values.startDate
-                    ? current && current.isBefore(dayjs(values.startDate), "day")
-                    : false
-                }
-                onChange={(date) => setFieldValue("endDate", date?.toISOString() || "")}
+                value={values.endDate ? dayjs(values.endDate) : null}
+                disabledDate={(current) => (values.startDate ? current && current.isBefore(dayjs(values.startDate), "day") : false)}
+                onChange={(date) => setFieldValue("endDate", date ? date.toISOString() : "")}
               />
               <ErrorMessage name="endDate" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
-            {/* Read-only fields for edit mode */}
             {!isNewPolicy && policyData?.policyNumber && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Policy Number</label>
@@ -195,27 +163,20 @@ const PolicyFormik = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData
                 <Input value={policyData?.isActive ? "Active" : "Inactive"} disabled />
               </div>
             )}
-
           </div>
 
           <div className="flex justify-end gap-4 mt-6">
             <Button onClick={onClose} disabled={loading}>
               Cancel
             </Button>
-            <Button
-              htmlType="submit"
-              type="primary"
-              loading={loading}
-              className="bg-blue-500 text-white"
-            >
+            <Button htmlType="submit" type="primary" loading={loading}>
               {isNewPolicy ? "Create Policy" : "Update Policy"}
             </Button>
           </div>
-
         </Form>
       )}
     </Formik>
   );
 };
 
-export default PolicyFormik;
+export default PolicyForm;

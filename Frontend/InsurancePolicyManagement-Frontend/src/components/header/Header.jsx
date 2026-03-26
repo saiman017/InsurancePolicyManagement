@@ -48,8 +48,8 @@ const Header = ({ onClick, onToggle }) => {
           </button>
 
           <Link to="/" className="lg:hidden">
-            <img className="dark:hidden" src="./images/logo/logo2.png" alt="Logo" />
-            <img className="hidden dark:block" src="./images/logo/logo2.png" alt="Logo" />
+            <img className="dark:hidden" src="../../icons/Logo.png" alt="Logo" />
+            <img className="hidden dark:block" src="../../icons/Logo.png" alt="Logo" />
           </Link>
 
           <button

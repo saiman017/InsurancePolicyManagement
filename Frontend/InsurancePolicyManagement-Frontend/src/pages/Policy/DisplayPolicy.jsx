@@ -7,7 +7,7 @@ import { EditOutlined } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "antd";
 import TextField from "@mui/material/TextField";
-import PolicyFormik from "./PolicyForm";
+import PolicyForm from "./PolicyForm";
 
 const POLICY_TYPE_LABEL = { 0: "Motor", 1: "Property", 2: "Travel" };
 const POLICY_TYPE_COLOR = { 0: "blue", 1: "purple", 2: "cyan" };
@@ -233,7 +233,7 @@ export default function DisplayPolicy() {
           </h3>
         }
       >
-        <PolicyFormik
+        <PolicyForm
           policyId={selectedPolicyId}
           isNewPolicy={isNewPolicy}
           onClose={handleCloseModal}
