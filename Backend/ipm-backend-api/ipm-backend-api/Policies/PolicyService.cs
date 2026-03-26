@@ -80,7 +80,7 @@ namespace ipm_backend_api.Policies
                 PropertyCount = policies.Count(p => p.PolicyType == PolicyType.Property),
                 TravelCount = policies.Count(p => p.PolicyType == PolicyType.Travel),
                 TotalSumInsured = policies.Sum(p => p.SumInsured),
-                HighValuePolicies = policies.Count(p => p.SumInsured > 2000000)
+                HighValuePolicies = policies.Count(p => p.SumInsured > 20000000)
             };
 
             return ResponseHandler.GetSuccessResponse(summary);
