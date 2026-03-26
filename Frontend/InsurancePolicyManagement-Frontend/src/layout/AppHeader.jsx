@@ -70,8 +70,8 @@ const AppHeader = () => {
           </button>
 
           <Link to="/" className="lg:hidden">
-            <img className="h-24 w-auto dark:hidden" src="./images/logo/logo2.png" alt="Logo" />
-            <img className="hidden h-24 w-auto dark:block" src="./images/logo/logo-dark.svg" alt="Logo" />
+            <img className="h-24 w-auto dark:hidden" src="../icons/Logo.png" alt="Logo" />
+            <img className="hidden h-24 w-auto dark:block" src="../icons/Logo.png" alt="Logo" />
           </Link>
 
           <button

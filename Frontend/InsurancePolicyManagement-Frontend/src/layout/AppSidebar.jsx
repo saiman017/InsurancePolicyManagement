@@ -169,8 +169,8 @@ const AppSidebar = () => {
         <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              <img className="dark:hidden" src="/images/logo/logo2.png" alt="Logo" width={130} height={40} />
-              <img className="hidden dark:block" src="/images/logo/logo2.png" alt="Logo" width={150} height={40} />
+              <img className="dark:hidden" src="../icons/Logo.png" alt="Logo" width={130} height={40} />
+              <img className="hidden dark:block" src="../icons/Logo.png" alt="Logo" width={150} height={40} />
             </>
           ) : (
             <img src="/images/logo/logo-sideBar.png" alt="Logo" width={80} height={80} />
