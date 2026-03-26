@@ -13,5 +13,11 @@ namespace ipm_backend_api.Policies.Contracts
 
         Task<APIResponse> GetPolicyByIdAsync(Guid id);
 
+        Task<APIResponse> GetPolicySummaryAsync();
+
+        Task<APIResponse> GetPolicyCountByTypeAsync();
+
+        Task<APIResponse> GetSumInsuredByTypeAsync();
+
     }
 }

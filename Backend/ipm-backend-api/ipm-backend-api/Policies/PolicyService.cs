@@ -68,5 +68,56 @@ namespace ipm_backend_api.Policies
 
             return ResponseHandler.GetSuccessResponse(PolicyMapper.ToPolicyResponse(existingPolicy), result);
         }
+
+        public async Task<APIResponse> GetPolicySummaryAsync()
+        {
+            var policies = await _db.Policies.GetAllAsync();
+
+            var summary = new PolicySummaryDto
+            {
+                TotalPolicies = policies.Count,
+                MotorCount = policies.Count(p => p.PolicyType == PolicyType.Motor),
+                PropertyCount = policies.Count(p => p.PolicyType == PolicyType.Property),
+                TravelCount = policies.Count(p => p.PolicyType == PolicyType.Travel),
+                TotalSumInsured = policies.Sum(p => p.SumInsured),
+                HighValuePolicies = policies.Count(p => p.SumInsured > 2000000)
+            };
+
+            return ResponseHandler.GetSuccessResponse(summary);
+        }
+
+        public async Task<APIResponse> GetPolicyCountByTypeAsync()
+        {
+            var policies = await _db.Policies.GetAllAsync();
+
+            var countByType = policies
+                .GroupBy(p => p.PolicyType)
+                .Select(g => new PolicyCountByTypeDto
+                {
+                    Type = g.Key.ToString(),
+                    Count = g.Count()
+                })
+                .OrderBy(x => x.Type)
+                .ToList();
+
+            return ResponseHandler.GetSuccessResponse(countByType);
+        }
+
+        public async Task<APIResponse> GetSumInsuredByTypeAsync()
+        {
+            var policies = await _db.Policies.GetAllAsync();
+
+            var sumInsuredByType = policies
+                .GroupBy(p => p.PolicyType)
+                .Select(g => new SumInsuredByTypeDto
+                {
+                    Type = g.Key.ToString(),
+                    TotalSumInsured = g.Sum(p => p.SumInsured)
+                })
+                .OrderBy(x => x.Type)
+                .ToList();
+
+            return ResponseHandler.GetSuccessResponse(sumInsuredByType);
+        }
     }
 }
