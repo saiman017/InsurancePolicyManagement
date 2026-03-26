@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { useSidebar } from "../context/SidebarContext";
-import { ThemeToggleButton } from "../components/common/ThemeToggleButton";
+import Logo from "../icons/Logo.png";
 
 const AppHeader = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -66,12 +66,11 @@ const AppHeader = () => {
                 />
               </svg>
             )}
-            {/* Cross Icon */}
           </button>
 
           <Link to="/" className="lg:hidden">
-            <img className="h-24 w-auto dark:hidden" src="../icons/Logo.png" alt="Logo" />
-            <img className="hidden h-24 w-auto dark:block" src="../icons/Logo.png" alt="Logo" />
+            <img className="h-24 w-auto dark:hidden" src={Logo} alt="Logo" />
+            <img className="hidden h-24 w-auto dark:block" src={Logo} alt="Logo" />
           </Link>
 
           <button
@@ -87,11 +86,6 @@ const AppHeader = () => {
               />
             </svg>
           </button>
-        </div>
-        <div className={`${isApplicationMenuOpen ? "flex" : "hidden"} items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}>
-          <div className="flex items-center gap-2 2xsm:gap-3">
-            <ThemeToggleButton />
-          </div>
         </div>
       </div>
     </header>
