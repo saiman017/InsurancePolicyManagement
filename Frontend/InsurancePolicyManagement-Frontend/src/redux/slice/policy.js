@@ -27,11 +27,38 @@ export const editPolicy = createAsyncThunk(
   }
 );
 
+export const fetchPolicySummary = createAsyncThunk(
+  "policy/fetchSummary",
+  async () => {
+    const response = await axiosInstance.get("/policy/summary");
+    return response.data.data;
+  }
+);
+
+export const fetchPolicyCountByType = createAsyncThunk(
+  "policy/fetchCountByType",
+  async () => {
+    const response = await axiosInstance.get("/policy/count-by-type");
+    return response.data.data;
+  }
+);
+
+export const fetchSumInsuredByType = createAsyncThunk(
+  "policy/fetchSumInsuredByType",
+  async () => {
+    const response = await axiosInstance.get("/policy/sum-insured-by-type");
+    return response.data.data;
+  }
+);
+
 const policySlice = createSlice({
   name: "policy",
   initialState: {
     list: [],
     selectedPolicy: null,
+    summary: null,
+    countByType: [],
+    sumInsuredByType: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -50,11 +77,24 @@ const policySlice = createSlice({
       })
       .addCase(getPolicyById.fulfilled, (state, action) => {
         state.selectedPolicy = action.payload;
+      })
+      // Analytics reducers
+      .addCase(fetchPolicySummary.fulfilled, (state, action) => {
+        state.summary = action.payload;
+      })
+      .addCase(fetchPolicyCountByType.fulfilled, (state, action) => {
+        state.countByType = action.payload;
+      })
+      .addCase(fetchSumInsuredByType.fulfilled, (state, action) => {
+        state.sumInsuredByType = action.payload;
       });
   },
 });
 
 export const selectAllPolicies = (state) => state.policy.list;
 export const selectPolicyById = (state) => state.policy.selectedPolicy;
+export const selectPolicySummary = (state) => state.policy.summary;
+export const selectPolicyCountByType = (state) => state.policy.countByType;
+export const selectSumInsuredByType = (state) => state.policy.sumInsuredByType;
 
 export default policySlice.reducer;
