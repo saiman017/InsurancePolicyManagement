@@ -6,7 +6,6 @@ import { Input, Select, Button, DatePicker } from "antd";
 import dayjs from "dayjs";
 import { addPolicy, editPolicy, fetchPolicies, getPolicyById } from "../../redux/slice/policy";
 import { toast } from "react-toastify";
-import { formatCurrency, formatNepaliNumber } from "../../utils/currencyFormatter";
 
 const HIGH_VALUE_THRESHOLD = 20000000;
 
@@ -40,23 +39,17 @@ const PolicyForm = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData }
   const dispatch = useDispatch();
   const [policyData, setPolicyData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [displayValue, setDisplayValue] = useState("");
 
   useEffect(() => {
     if (isNewPolicy) {
       setPolicyData(null);
-      setDisplayValue("");
     } else if (policyId && !initialData) {
       dispatch(getPolicyById(policyId))
         .unwrap()
-        .then((data) => {
-          setPolicyData(data);
-          setDisplayValue(formatCurrency(data?.sumInsured) || "");
-        })
+        .then((data) => setPolicyData(data))
         .catch(() => {});
     } else if (initialData) {
       setPolicyData(initialData);
-      setDisplayValue(formatCurrency(initialData?.sumInsured) || "");
     }
   }, [dispatch, isNewPolicy, policyId, initialData]);
 
@@ -66,32 +59,6 @@ const PolicyForm = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData }
     sumInsured: policyData?.sumInsured ?? "",
     startDate: policyData?.startDate || "",
     endDate: policyData?.endDate || "",
-  };
-
-  const handleSumInsuredChange = (e, setFieldValue) => {
-    const rawValue = e.target.value.replace(/[^\d]/g, "");
-    const numericValue = rawValue ? parseInt(rawValue, 10) : "";
-    setFieldValue("sumInsured", numericValue);
-    
-    if (numericValue) {
-      setDisplayValue(formatCurrency(numericValue));
-    } else {
-      setDisplayValue("");
-    }
-  };
-
-  const handleSumInsuredBlur = (setFieldValue, currentValue) => {
-    if (currentValue) {
-      setDisplayValue(formatCurrency(currentValue));
-    }
-  };
-
-  const handleSumInsuredFocus = (setFieldValue, currentValue) => {
-    if (currentValue) {
-      setDisplayValue(currentValue.toString());
-    } else {
-      setDisplayValue("");
-    }
   };
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -129,9 +96,7 @@ const PolicyForm = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData }
       {({ setFieldValue, values }) => (
         <Form className="space-y-4">
           {Number(values.sumInsured) > HIGH_VALUE_THRESHOLD && (
-            <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg px-4 py-3 text-sm font-medium">
-              High Value Policy — Requires Underwriting Approval
-            </div>
+            <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg px-4 py-3 text-sm font-medium">High Value Policy — Requires Underwriting Approval</div>
           )}
 
           <div className="grid grid-cols-2 gap-4">
@@ -147,27 +112,15 @@ const PolicyForm = ({ policyId, isNewPolicy, onClose, afterSubmit, initialData }
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Policy Type <span className="text-red-500">*</span>
               </label>
-              <Select 
-                placeholder="Select policy type" 
-                className="w-full" 
-                value={values.policyType} 
-                onChange={(val) => setFieldValue("policyType", val)} 
-                options={POLICY_TYPE_OPTIONS} 
-              />
+              <Select placeholder="Select policy type" className="w-full" value={values.policyType} onChange={(val) => setFieldValue("policyType", val)} options={POLICY_TYPE_OPTIONS} />
               <ErrorMessage name="policyType" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Sum Insured (NPR) <span className="text-red-500">*</span>
+                Sum Insured (₹) <span className="text-red-500">*</span>
               </label>
-              <Input
-                value={displayValue || (values.sumInsured ? formatCurrency(values.sumInsured) : "")}
-                onChange={(e) => handleSumInsuredChange(e, setFieldValue)}
-                onFocus={() => handleSumInsuredFocus(setFieldValue, values.sumInsured)}
-                onBlur={() => handleSumInsuredBlur(setFieldValue, values.sumInsured)}
-                placeholder="Enter sum insured"
-              />
+              <Field name="sumInsured">{({ field }) => <Input {...field} type="number" placeholder="Enter sum insured" onChange={(e) => setFieldValue("sumInsured", e.target.value)} />}</Field>
               <ErrorMessage name="sumInsured" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
